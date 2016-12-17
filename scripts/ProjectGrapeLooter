@@ -79,11 +79,6 @@ public class ProjectGrapeLooter extends PollingScript<ClientContext> implements 
             g.drawString("GrapeLooter", 9, 337);
             g.setFont(font3);
             g.drawString("by Terminator1", 178, 336);
-        g.setColor(color1);
-        g.fillRect(13, 459, 115, 13);
-        g.setColor(color2);
-        g.setStroke(stroke1);
-        g.drawRect(13, 459, 115, 13);
         //END: Code generated using Enfilade's Easel
 
 
