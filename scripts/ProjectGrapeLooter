@@ -1,0 +1,91 @@
+package scripts;
+
+import api.Node;
+
+import db.Shared;
+import node.ProjectGrapeLooter.*;
+import org.powerbot.script.Condition;
+import org.powerbot.script.PaintListener;
+import org.powerbot.script.PollingScript;
+import org.powerbot.script.Script;
+import org.powerbot.script.rt4.ClientContext;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+/**
+ * Created by Genoss on 12/16/2016:4:09 PM
+ */
+@Script.Manifest(description = "Loots grapes in cooking guild. v1.0006 Author:Terminator-1,Noodleking", name = "Grape Looter")
+public class ProjectGrapeLooter extends PollingScript<ClientContext> implements PaintListener{
+
+    List<Node> eL = new ArrayList<Node>();
+
+    private long startTime = 0;
+
+    public void start() {
+        Shared.store().status = "Starting script...";
+        eL.addAll(Arrays.asList(new LootGrape(ctx),new getOutsideOfGuild(ctx),new walkToBank(ctx),new walkToGuild(ctx),new getInsideOfGuild(ctx)));
+        startTime = getRuntime();
+    }
+
+    @Override
+    public void poll() {
+        for(Node node:eL) {
+            if(node.isReady())
+                node.executeBlock();
+        }
+        Condition.sleep(769);
+    }
+
+    @Override
+    public void repaint(Graphics graphics) {
+        Graphics2D g = (Graphics2D) graphics;
+
+        long milliseconds = getRuntime()-startTime;
+        int seconds = (int) (milliseconds / 1000) % 60 ;
+        int minutes = (int) ((milliseconds / (1000*60)) % 60);
+        int hours   = (int) ((milliseconds / (1000*60*60)) % 24);
+        final int bankHr = (int) ((Shared.store().bankCount * 3600000D) / milliseconds);
+
+        //START: Code generated using Enfilade's Easel
+        final Color color1 = new Color(204, 0, 204, 114);
+        final Color color2 = new Color(153, 0, 153);
+        final Color color3 = new Color(255, 255, 255);
+        final Color color4 = new Color(204, 0, 204);
+
+        final BasicStroke stroke1 = new BasicStroke(15);
+
+        final Font font1 = new Font("Arial", 0, 18);
+        final Font font2 = new Font("Arial", 0, 30);
+        final Font font3 = new Font("Arial", 0, 10);
+
+            g.setColor(color1);
+            g.fillRoundRect(524, 173, 236, 340, 16, 16);
+            g.setColor(color2);
+            g.setStroke(stroke1);
+            g.drawRoundRect(524, 173, 236, 340, 16, 16);
+            g.setFont(font1);
+            g.setColor(color3);
+            g.drawString("Grapes Invents: "+Shared.store().bankCount, 546, 294);
+            g.drawString("Grapes Invents/Hr: "+bankHr, 546, 349);
+            g.drawString("Status:"+Shared.store().status, 546, 238);
+            g.drawString("RunTime:"+hours+"H::"+minutes+"M::"+seconds+"S", 546, 404);
+            //g.drawString("GP/HR:(FUTURE)", 565, 447);
+            g.setFont(font2);
+            g.setColor(color4);
+            g.drawString("GrapeLooter", 9, 337);
+            g.setFont(font3);
+            g.drawString("by Terminator1", 178, 336);
+        g.setColor(color1);
+        g.fillRect(13, 459, 115, 13);
+        g.setColor(color2);
+        g.setStroke(stroke1);
+        g.drawRect(13, 459, 115, 13);
+        //END: Code generated using Enfilade's Easel
+
+
+    }
+}
